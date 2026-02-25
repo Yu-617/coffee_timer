@@ -34,27 +34,31 @@
    git clone [https://github.com/Yu-617/coffee-timer.git](https://github.com/Yu-617/coffee-timer.git)
    cd coffee-timer
    ```
-2. 必要なパッケージのインストール
+3. 必要なパッケージのインストール
 
-  ```bash
-  pip install -r requirements.txt
-  ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 3. Secrets（パスワード）の設定
-  ローカルで動かすために、パスワードを設定する秘密のファイルを作成します。
-  プロジェクトのルートディレクトリに `.streamlit` フォルダを作成し、その中に `secrets.toml` というファイルを作成して以下を記述してください。
+   ローカルで動かすために、パスワードを設定する秘密のファイルを作成します。
+   プロジェクトのルートディレクトリに `.streamlit` フォルダを作成し、その中に `secrets.toml` というファイルを作成して以下を記述してください。
+   
+   ```Ini, TOML
+   # .streamlit/secrets.toml
+   APP_PASSWORD = "お好きなパスワード"
+   ```
 
-  ```Ini, TOML
-  # .streamlit/secrets.toml
-  APP_PASSWORD = "お好きなパスワード"
-  ```
-
-  ※ .streamlit フォルダは .gitignore に追加し、絶対にGitHubにプッシュしないようご注意ください。
+   ※ .streamlit フォルダは .gitignore に追加し、絶対にGitHubにプッシュしないようご注意ください。
 
 4. アプリの起動
 
-  ```bash
-  streamlit run app.py
-  ```
+   ```bash
+   streamlit run app.py
+   ```
 
-## 作成者
+5. アプリの終了
+
+   ctrl+C
+
+## 🖋️ 作成者 (Author)
 [Yu-617](https://github.com/Yu-617)
