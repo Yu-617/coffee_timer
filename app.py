@@ -5,7 +5,6 @@ import math
 # ==========================================
 # 0. パスワードロック機能（追加部分）
 # ==========================================
-pw = "cielo"  # ★ここを身内だけで共有するお好きな合言葉に変更してください
 
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
@@ -23,7 +22,7 @@ if not st.session_state.authenticated:
     st.title("🔒 Coffee Timer")
     password = st.text_input("合言葉を入力してください (Please enter the password)", type="password")
     if st.button("Login", type="primary", use_container_width=True):
-        if password == pw:
+        if password == st.secrets["APP_PASSWORD"]:
             st.session_state.authenticated = True
             st.rerun()
         else:
