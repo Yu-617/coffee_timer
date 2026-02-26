@@ -21,8 +21,7 @@
 ## 🚀 使い方 (Usage / Installation)
 
 ### Webアプリとして利用する場合（ユーザー向け）
-以下のURLからアプリにアクセスできます。
-👉 **[[Coffee Timer](https://coffeetimer.streamlit.app/)]**
+**[Coffee Timer](https://coffeetimer.streamlit.app/)** 👈️からアプリにアクセスできます。
 
 > **⚠️ 注意事項**
 > 本リポジトリのソースコードは公開されていますが、Webアプリの利用にはパスワードロックがかかっています。環境変数（Streamlit Secrets）で管理されているため、パスワードをご存知の方のみがログイン可能です。
