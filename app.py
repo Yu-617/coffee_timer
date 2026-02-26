@@ -20,7 +20,8 @@ if not st.session_state.authenticated:
     """, unsafe_allow_html=True)
     
     st.title("🔒 Coffee Timer")
-    password = st.text_input("合言葉を入力してください (Please enter the password)", type="password")
+    st.markdown('<p style="color: #4b3832; font-weight: bold;">合言葉を入力してください (Please enter the password)</p>', unsafe_allow_html=True)
+    password = st.text_input("Pass", type="password", label_visibility="collapsed")
     if st.button("Login", type="primary", use_container_width=True):
         if password == st.secrets["APP_PASSWORD"]:
             st.session_state.authenticated = True
