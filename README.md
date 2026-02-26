@@ -13,7 +13,7 @@
 
 
 ## 🛠 技術スタック (Tech Stack)
-- **Language:** Python 3
+- **Language:** Python 3.1
 - **Framework:** Streamlit
 - **Library:** Pandas
 - **AI Assistance:** 本アプリケーションの設計およびコード生成の一部は、Google Geminiのサポートを受けて開発されました。
