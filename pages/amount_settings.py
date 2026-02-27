@@ -11,6 +11,15 @@ if "lang" not in st.session_state:
 
 lang = st.session_state.lang
 
+# --- カスタムナビゲーション（サイドバー） ---
+with st.sidebar:
+    if st.session_state.lang == "ja":
+        st.page_link("app.py", label="☕ ホーム")
+        st.page_link("pages/amount_settings.py", label="⚙️ 抽出量設定")
+    else:
+        st.page_link("app.py", label="☕ Home")
+        st.page_link("pages/amount_settings.py", label="⚙️ Settings")
+
 # 2. 多言語対応のテキスト辞書
 text = {
     "ja": {

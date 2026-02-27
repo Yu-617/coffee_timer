@@ -49,6 +49,16 @@ BASE_WATER_RATIO = 15.0
 # ==========================================
 # 1. ページ設定とカスタムCSS
 # ==========================================
+# --- カスタムナビゲーション（サイドバー） ---
+with st.sidebar:
+    if st.session_state.lang == "ja":
+        st.page_link("app.py", label="☕ ホーム")
+        st.page_link("pages/amount_settings.py", label="⚙️ 抽出量設定")
+    else:
+        st.page_link("app.py", label="☕ Home")
+        st.page_link("pages/amount_settings.py", label="⚙️ Settings")
+
+
 st.set_page_config(page_title="Coffee Timer", page_icon="☕", layout="centered")
 
 st.markdown("""
