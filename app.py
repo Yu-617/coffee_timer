@@ -50,6 +50,11 @@ st.markdown("""
     .stApp { background-color: #FFFDF9 !important; color: #5D4037 !important; }
     h1, h2, h3, span, div, label { color: #5D4037 !important; }
     
+    /* 👇 ここを追加！サイドバーの中の文字色を白に上書きします */
+    [data-testid="stSidebar"] * { 
+        color: #FFFFFF !important; 
+    }
+    
     /* 入力フォーム */
     input[type="number"] { background-color: #F5EFEB !important; color: #5D4037 !important; border-color: #D7CCC8 !important; }
     div[role="radiogroup"] label[data-baseweb="radio"] > div:first-child { background-color: #8D6E63 !important; border-color: #8D6E63 !important; }
@@ -134,7 +139,7 @@ def calculate_custom_46(total_water: float, strength: str) -> dict:
     ratio = water_ratio_small if total_water <= threshold_small else BASE_WATER_RATIO
     
     beans_weight = total_water / ratio
-    scoops = beans_weight / SCOOP_WEIGHT
+    scoops = beans_weight / st.session_state.SCOOP_WEIGHT
     
     water_40 = total_water * 0.4
     pour_1 = beans_weight * 2.0
@@ -229,7 +234,7 @@ with col1:
         total_water = st.number_input(t["water_label"], min_value=100, max_value=1000, value=200, step=10)
     else:
         num_people = st.number_input(t["people_label"], min_value=1, max_value=6, value=1, step=1)
-        total_water = num_people * WATER_PER_PERSON
+        total_water = num_people * st.session_state.WATER_PER_PERSON
         st.caption(t["calc_caption"].format(water=int(total_water)))
 
 with col2:
