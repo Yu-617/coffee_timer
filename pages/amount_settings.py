@@ -4,7 +4,7 @@ import streamlit as st
 if "WATER_PER_PERSON" not in st.session_state:
     st.session_state.WATER_PER_PERSON = 160
 if "SCOOP_WEIGHT" not in st.session_state:
-    st.session_state.SCOOP_WEIGHT = 12
+    st.session_state.SCOOP_WEIGHT = 12.0
 
 if "lang" not in st.session_state:
     st.session_state.lang = "ja"
@@ -45,7 +45,7 @@ new_water = st.number_input(
 new_scoop = st.number_input(
     t["scoop_label"], 
     value=st.session_state.SCOOP_WEIGHT, 
-    step=1
+    step=1.0
 )
 
 if st.button(t["save_btn"]):
