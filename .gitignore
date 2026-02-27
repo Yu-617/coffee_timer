@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 
 # Streamlit secrets (for security!)
-.streamlit/
+.streamlit/secrets.toml
 
 # OS generated files
 .DS_Store
