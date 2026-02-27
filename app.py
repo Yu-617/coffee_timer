@@ -31,13 +31,20 @@ if not st.session_state.authenticated:
     st.stop()  # 認証されるまで、これより下のコードは一切実行・表示されません
 
 # ==========================================
-# ★ アプリの設定値（定数）
+# ★ アプリの設定値（セッション状態の初期化）
 # ==========================================
-WATER_PER_PERSON = 160      # 1人あたりの湯量 (ml)（人数指定時）
-MAX_BREW_TIME_SEC = 210     # 全体の抽出時間の上限 (秒) = 3分30秒
-IDEAL_STEP_TIME_SEC = 45    # 1工程あたりの理想的な待機時間 (秒)
-SCOOP_WEIGHT = 12.0         # 計量スプーン1杯の重さ (g)
-BASE_WATER_RATIO = 15.0     # 基本の抽出比率 (粉1gに対する湯量)
+# 変動する設定値の初期化
+if "WATER_PER_PERSON" not in st.session_state:
+    st.session_state.WATER_PER_PERSON = 160
+if "SCOOP_WEIGHT" not in st.session_state:
+    st.session_state.SCOOP_WEIGHT = 12.0
+if "lang" not in st.session_state:
+    st.session_state.lang = "ja"
+
+# 固定の定数（ユーザーが変更しないもの）
+MAX_BREW_TIME_SEC = 210
+IDEAL_STEP_TIME_SEC = 45
+BASE_WATER_RATIO = 15.0
 
 # ==========================================
 # 1. ページ設定とカスタムCSS
@@ -97,17 +104,22 @@ with col_title:
     st.title("☕️ Coffee Timer")
 with col_lang:
     st.markdown('<div class="lang-switcher">', unsafe_allow_html=True)
-    lang = st.radio("Language", ["日本語", "English"], horizontal=True, label_visibility="collapsed")
+    # 現在のセッション状態に合わせて初期選択を決定
+    lang_index = 0 if st.session_state.lang == "ja" else 1
+    selected_lang = st.radio("Language", ["日本語", "English"], index=lang_index, horizontal=True, label_visibility="collapsed")
     st.markdown('</div>', unsafe_allow_html=True)
 
-is_ja = (lang == "日本語")
+# 選択された言語をセッション状態に保存（これで別ページにも連動します）
+st.session_state.lang = "ja" if selected_lang == "日本語" else "en"
+is_ja = (st.session_state.lang == "ja")
+
 
 # テキスト辞書
 t = {
     "method_water": "湯量で指定 (ml)" if is_ja else "By Water (ml)",
     "method_people": "人数で指定 (人)" if is_ja else "By People",
     "water_label": "抽出したい量 (ml)" if is_ja else "Total Water (ml)",
-    "people_label": f"人数 (1人={WATER_PER_PERSON}ml)" if is_ja else f"People ({WATER_PER_PERSON}ml/person)",
+    "people_label": f"人数 (1人={st.session_state.WATER_PER_PERSON}ml)" if is_ja else f"People ({st.session_state.WATER_PER_PERSON}ml/person)",
     "calc_caption": "※合計湯量: {water} ml" if is_ja else "* Total water: {water} ml",
     "strength": "お好みの濃さ" if is_ja else "Strength",
     "str_light": "浅め" if is_ja else "Light",
