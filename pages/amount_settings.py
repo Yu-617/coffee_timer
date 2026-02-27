@@ -4,9 +4,9 @@ st.title("⚙️ 設定 (Settings)")
 
 # session_state（アプリ全体で共有する変数）の初期化
 if "WATER_PER_PERSON" not in st.session_state:
-    st.session_state.WATER_PER_PERSON = 150
+    st.session_state.WATER_PER_PERSON = 160
 if "SCOOP_WEIGHT" not in st.session_state:
-    st.session_state.SCOOP_WEIGHT = 10
+    st.session_state.SCOOP_WEIGHT = 12
 
 st.write("コーヒーの抽出に関する基本設定を変更できます。")
 
