@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.set_page_config(page_title="Coffee Timer - Settings", page_icon="☕", layout="centered")
+
 # 1. 安全のための初期化（app.pyと同じものを記述）
 if "WATER_PER_PERSON" not in st.session_state:
     st.session_state.WATER_PER_PERSON = 160
@@ -10,6 +12,26 @@ if "lang" not in st.session_state:
     st.session_state.lang = "ja"
 
 lang = st.session_state.lang
+
+st.markdown("""
+<style>
+    .stApp { background-color: #FFFDF9 !important; color: #5D4037 !important; }
+    h1, h2, h3, span, div, label { color: #5D4037 !important; }
+    [data-testid="stSidebar"] * { color: #FFFFFF !important; }
+    input[type="number"] { background-color: #F5EFEB !important; color: #5D4037 !important; border-color: #D7CCC8 !important; }
+    button[kind="primary"] {
+        background-color: #8D6E63 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 15px 0 !important;
+        transition: all 0.3s;
+    }
+    button[kind="primary"] * { color: #FFFFFF !important; }
+    button[kind="primary"] p { font-size: 1.1rem !important; font-weight: bold !important; color: #FFFFFF !important; }
+    button[kind="primary"]:hover { background-color: #6D4C41 !important; transform: scale(1.02); }
+</style>
+""", unsafe_allow_html=True)
 
 # --- カスタムナビゲーション（サイドバー） ---
 with st.sidebar:
@@ -57,7 +79,7 @@ new_scoop = st.number_input(
     step=1.0
 )
 
-if st.button(t["save_btn"]):
+if st.button(t["save_btn"], type="primary", use_container_width=True):
     st.session_state.WATER_PER_PERSON = new_water
     st.session_state.SCOOP_WEIGHT = new_scoop
     st.success(t["success"])

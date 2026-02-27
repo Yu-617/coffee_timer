@@ -5,12 +5,12 @@ import math
 # ==========================================
 # 0. パスワードロック機能（追加部分）
 # ==========================================
+st.set_page_config(page_title="Coffee Timer", page_icon="☕", layout="centered")
 
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.set_page_config(page_title="Coffee Timer Login", page_icon="☕", layout="centered")
     st.markdown("""
         <style>
             .stApp { background-color: #FFFDF9 !important; color: #5D4037 !important; }
@@ -58,8 +58,6 @@ with st.sidebar:
         st.page_link("app.py", label="☕ Home")
         st.page_link("pages/amount_settings.py", label="⚙️ Settings")
 
-
-st.set_page_config(page_title="Coffee Timer", page_icon="☕", layout="centered")
 
 st.markdown("""
 <style>
