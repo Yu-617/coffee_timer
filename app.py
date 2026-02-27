@@ -67,8 +67,15 @@ st.markdown("""
     .stApp { background-color: #FFFDF9 !important; color: #5D4037 !important; }
     h1, h2, h3, span, div, label { color: #5D4037 !important; }
     
-    /* 👇 ここを追加！サイドバーの中の文字色を白に上書きします */
-    [data-testid="stSidebar"] * { 
+    /* ヘッダー（上部バー）の背景とアイコン色を修正 */
+    [data-testid="stHeader"] { background-color: #FFFDF9 !important; }
+    [data-testid="stHeader"] * { color: #5D4037 !important; }
+    
+    /* 画面全体の不要な上部余白（デフォルトの巨大な隙間）を削る */
+    .block-container { padding-top: 2rem !important; }
+    
+    /* サイドバーの中の文字色を白に上書き（より強力に） */
+    [data-testid="stSidebar"] *, [data-testid="stSidebarNav"] span { 
         color: #FFFFFF !important; 
     }
     
@@ -150,7 +157,6 @@ t = {
     "credit": "※本ツールは、粕谷哲氏考案の<a href='https://www.youtube.com/watch?v=lJNPp-onikk' target='_blank' style='color: #8D6E63; text-decoration: underline;'>「4:6メソッド」</a>の抽出理論を参考に作成しています。" if is_ja else "*This tool is inspired by the <a href='https://www.youtube.com/watch?v=lJNPp-onikk' target='_blank' style='color: #8D6E63; text-decoration: underline;'>\"4:6 method\"</a> created by Tetsu Kasuya."
 }
 
-st.write("---")
 
 # ==========================================
 # 3. ロジック部分（計算関数）
