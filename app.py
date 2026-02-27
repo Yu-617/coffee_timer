@@ -45,6 +45,8 @@ if "lang" not in st.session_state:
 MAX_BREW_TIME_SEC = 210
 IDEAL_STEP_TIME_SEC = 45
 BASE_WATER_RATIO = 15.0
+BASE_WATER_RATIO_SMALL = 12.0
+BASE_WATER_RATIO_THRESHOLD = 200.0
 
 # ==========================================
 # 1. ページ設定とカスタムCSS
@@ -67,8 +69,15 @@ st.markdown("""
     .stApp { background-color: #FFFDF9 !important; color: #5D4037 !important; }
     h1, h2, h3, span, div, label { color: #5D4037 !important; }
     
-    /* 👇 ここを追加！サイドバーの中の文字色を白に上書きします */
-    [data-testid="stSidebar"] * { 
+    /* ヘッダー（上部バー）の背景とアイコン色を修正 */
+    [data-testid="stHeader"] { background-color: #FFFDF9 !important; }
+    [data-testid="stHeader"] * { color: #5D4037 !important; }
+    
+    /* 画面全体の不要な上部余白（デフォルトの巨大な隙間）を削る */
+    .block-container { padding-top: 2rem !important; }
+    
+    /* サイドバーの中の文字色を白に上書き（より強力に） */
+    [data-testid="stSidebar"] *, [data-testid="stSidebarNav"] span { 
         color: #FFFFFF !important; 
     }
     
@@ -150,25 +159,43 @@ t = {
     "credit": "※本ツールは、粕谷哲氏考案の<a href='https://www.youtube.com/watch?v=lJNPp-onikk' target='_blank' style='color: #8D6E63; text-decoration: underline;'>「4:6メソッド」</a>の抽出理論を参考に作成しています。" if is_ja else "*This tool is inspired by the <a href='https://www.youtube.com/watch?v=lJNPp-onikk' target='_blank' style='color: #8D6E63; text-decoration: underline;'>\"4:6 method\"</a> created by Tetsu Kasuya."
 }
 
-st.write("---")
 
 # ==========================================
 # 3. ロジック部分（計算関数）
 # ==========================================
-def calculate_custom_46(total_water: float, strength: str) -> dict:
-    water_ratio_small = BASE_WATER_RATIO * 0.8
-    threshold_small = 250
-    ratio = water_ratio_small if total_water <= threshold_small else BASE_WATER_RATIO
+def sigmoid(x, ymin, ymax, x0, k):
+    return ymin + (ymax - ymin) / (1.0 + math.exp(-k * (x - x0)))
+
+def calculate_beans_amount(total_water: float) -> dict:
+    """湯量から豆量と比率を計算する関数"""
+    ratio = sigmoid(total_water, BASE_WATER_RATIO_SMALL, BASE_WATER_RATIO, BASE_WATER_RATIO_THRESHOLD, 1/50.0)
     
     beans_weight = total_water / ratio
     scoops = beans_weight / st.session_state.SCOOP_WEIGHT
     
+    return {
+        "beans_g": beans_weight,
+        "scoops": scoops,
+        "ratio": ratio
+    }
+
+def generate_recipe_timeline(total_water: float, strength: str, t: dict, is_ja: bool) -> list:
+    """抽出レシピ（タイムライン）を生成する関数"""
     water_40 = total_water * 0.4
-    pour_1 = beans_weight * 2.0
-    pour_2 = water_40 - pour_1
+    
+    # 40%部分は均等に2分割
+    pour_1 = water_40 / 2.0
+    pour_2 = water_40 / 2.0
     pours = [pour_1, pour_2]
     
-    divisions = 2 if strength == t["str_light"] else (4 if strength == t["str_strong"] else 3)
+    # 60%部分は濃さに応じて1〜3分割
+    if strength == t["str_light"]:
+        divisions = 1
+    elif strength == t["str_strong"]:
+        divisions = 3
+    else:
+        divisions = 2
+        
     water_60 = total_water - water_40
     pour_60_each = water_60 / divisions
     for _ in range(divisions):
@@ -177,7 +204,6 @@ def calculate_custom_46(total_water: float, strength: str) -> dict:
     timeline = []
     cumulative_water = 0
     
-    # 言語に応じたステップ名
     if is_ja:
         step_names = ["1投目", "2投目"] + [f"{i+3}投目" for i in range(divisions)]
     else:
@@ -196,11 +222,7 @@ def calculate_custom_46(total_water: float, strength: str) -> dict:
             "待機時間 (秒)": duration_per_step
         })
         
-    return {
-        "beans_g": beans_weight,
-        "scoops": scoops,
-        "timeline": timeline
-    }
+    return timeline
 
 # ==========================================
 # 4. 円形タイマー描画用の関数
@@ -262,13 +284,15 @@ with col1:
 with col2:
     strength = st.radio(t["strength"], options=[t["str_light"], t["str_normal"], t["str_strong"]], index=1, horizontal=True)
 
-result = calculate_custom_46(total_water, strength)
+# 💡 ここで新しく分割した2つの関数を呼び出します
+beans_info = calculate_beans_amount(total_water)
+timeline = generate_recipe_timeline(total_water, strength, t, is_ja)
 
 st.write("")
 
 # --- 結果表示 ---
-scoops_str = t["scoops"].format(scoops=round(result['scoops'], 1))
-beans_g_str = f"({round(result['beans_g'], 1)} g)"
+scoops_str = t["scoops"].format(scoops=round(beans_info['scoops'], 1))
+beans_g_str = f"({round(beans_info['beans_g'], 1)} g)"
 
 st.markdown(f"""
 <div style="display: flex; justify-content: space-around; background-color: #FFFFFF; padding: 20px; border-radius: 10px; border: 1px solid #EFEBE9; box-shadow: 0 2px 8px rgba(93, 64, 55, 0.05); margin-bottom: 20px;">
@@ -306,7 +330,6 @@ with timer_area:
         next_step_placeholder = st.empty()
         sound_placeholder = st.empty()
         
-        timeline = result["timeline"]
         total_steps = len(timeline)
 
         for i, step_info in enumerate(timeline):
